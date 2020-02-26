@@ -1,0 +1,41 @@
+version: '2'
+
+services:
+    api:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        volumes:
+            - .:/app
+            - /app/node_modules
+        ports:
+            - 3000:3000
+            - 9229:9229
+        depends_on:
+            - postgres-service
+
+    postgres-service:
+        image: postgres
+        restart: unless-stopped
+        environment:
+            POSTGRES_USER: postgres
+            POSTGRES_PASSWORD: postgres
+            PGDATA: /data/postgres
+        volumes:
+            - postgres:/data/postgres
+        ports:
+            - 5432:5432
+
+    pgAdmin:
+        image: dpage/pgadmin4
+        environment:
+            PGADMIN_DEFAULT_EMAIL: hello@hello.com
+            PGADMIN_DEFAULT_PASSWORD: banana
+        volumes:
+            - pgadmin:/root/.pgadmin
+        ports:
+            - 5050:80
+
+volumes:
+    postgres:
+    pgadmin:
