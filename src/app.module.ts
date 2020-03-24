@@ -8,7 +8,9 @@ import { typeOrmConfig } from './config/typeorm.config';
   imports: [
     TypeOrmModule.forRoot(typeOrmConfig),
     GraphQLModule.forRoot({
-      autoSchemaFile: 'schema.gql'
+      autoSchemaFile: 'schema.gql',
+      introspection: true,
+      playground: true
     }),
     TasksModule
   ]
