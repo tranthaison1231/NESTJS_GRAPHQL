@@ -1,13 +1,13 @@
 import { IsNotEmpty } from 'class-validator';
-import { InputType, Field } from 'type-graphql';
+import { InputType, Field } from '@nestjs/graphql';
 
 @InputType()
 export class CreateTaskDto {
-    @IsNotEmpty()
-    @Field()
-    title: string;
+  @IsNotEmpty()
+  @Field()
+  title: string;
 
-    @IsNotEmpty()
-    @Field()
-    description: string;
+  @IsNotEmpty()
+  @Field()
+  description: string;
 }

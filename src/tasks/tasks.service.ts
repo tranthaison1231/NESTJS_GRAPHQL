@@ -1,7 +1,7 @@
 import {
-    Injectable,
-    NotFoundException,
-    InternalServerErrorException
+  Injectable,
+  NotFoundException,
+  InternalServerErrorException
 } from '@nestjs/common';
 import { TaskRepository } from './task.repository';
 import { CreateTaskDto } from './dtos/create-task.dto';
@@ -10,58 +10,56 @@ import { UpdateTaskDto } from './dtos/update-task.dto';
 
 @Injectable()
 export class TasksService {
-    constructor(private taskRepository: TaskRepository) {}
+  constructor(private taskRepository: TaskRepository) {}
 
-    async getTasks(): Promise<Task[]> {
-        return await this.taskRepository.getTasks();
+  async getTasks(): Promise<Task[]> {
+    return await this.taskRepository.getTasks();
+  }
+
+  async getTaskById(id: string): Promise<Task> {
+    const task = await this.taskRepository.findOne({ id });
+
+    if (!task) {
+      throw new NotFoundException(`Task with ID ${id} not found.`);
     }
 
-    async getTaskById(id: string): Promise<Task> {
-        const task = await this.taskRepository.findOne({ id });
+    return task;
+  }
 
-        if (!task) {
-            throw new NotFoundException(`Task with ID ${id} not found.`);
-        }
+  async createTask(createTaskDto: CreateTaskDto): Promise<Task> {
+    return await this.taskRepository.createTask(createTaskDto);
+  }
 
-        return task;
+  async updateTask(
+    id: string,
+    { title, description, status }: UpdateTaskDto
+  ): Promise<Task> {
+    const task = await this.getTaskById(id);
+
+    if (title) {
+      task.title = title;
     }
 
-    async createTask(createTaskDto: CreateTaskDto): Promise<Task> {
-        return await this.taskRepository.createTask(createTaskDto);
+    if (description) {
+      task.description = description;
     }
 
-    async updateTask(
-        id: string,
-        { title, description, status }: UpdateTaskDto
-    ): Promise<Task> {
-        const task = await this.getTaskById(id);
-
-        if (title) {
-            task.title = title;
-        }
-
-        if (description) {
-            task.description = description;
-        }
-
-        if (status) {
-            task.status = status;
-        }
-
-        await task.save();
-
-        return task;
+    if (status) {
+      task.status = status;
     }
 
-    async deleteTask(id: string): Promise<string> {
-        const deleteResult = await this.taskRepository.delete({ id });
+    await task.save();
 
-        if (deleteResult.affected === 0) {
-            throw new InternalServerErrorException(
-                `Task with ID ${id} not found.`
-            );
-        } else {
-            return id;
-        }
+    return task;
+  }
+
+  async deleteTask(id: string): Promise<string> {
+    const deleteResult = await this.taskRepository.delete({ id });
+
+    if (deleteResult.affected === 0) {
+      throw new InternalServerErrorException(`Task with ID ${id} not found.`);
+    } else {
+      return id;
     }
+  }
 }
