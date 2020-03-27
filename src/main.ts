@@ -1,11 +1,11 @@
 import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import * as rateLimit from 'express-rate-limit';
-import { PORT } from './environments';
 import * as compression from 'compression';
 import { Logger, InternalServerErrorException } from '@nestjs/common';
 import * as helmet from 'helmet';
+import { PORT } from './environments';
+import { AppModule } from './app.module';
 
 async function bootstrap() {
   try {
