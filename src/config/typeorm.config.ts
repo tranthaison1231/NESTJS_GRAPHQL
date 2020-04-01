@@ -17,4 +17,11 @@ export const typeOrmConfig: TypeOrmModuleOptions = {
   database: RDS_DB_NAME,
   entities: [`${__dirname}/../**/*.entity.{js,ts}`],
   synchronize: true,
+  // allow both start:prod and start:dev to use migrations
+  // __dirname is either dist or src folder, meaning either
+  // the compiled js in prod or the ts in dev
+  migrations: [`${__dirname}/migrations/**/*{.ts,.js}`],
+  cli: {
+    migrationsDir: 'src/migrations',
+  },
 };
