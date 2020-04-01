@@ -4,6 +4,7 @@ import * as rateLimit from 'express-rate-limit';
 import * as compression from 'compression';
 import { Logger, InternalServerErrorException } from '@nestjs/common';
 import * as helmet from 'helmet';
+import { async } from 'rxjs/internal/scheduler/async';
 import { PORT } from './environments';
 import { AppModule } from './app.module';
 
@@ -12,7 +13,7 @@ async function bootstrap() {
     const logger = new Logger('bootstrap');
 
     const app = await NestFactory.create<NestExpressApplication>(AppModule, {
-      cors: true
+      cors: true,
     });
 
     // Compression
@@ -23,8 +24,8 @@ async function bootstrap() {
     app.use(
       rateLimit({
         windowMs: 15 * 60 * 1000, // 15 minutes
-        max: 100 // limit each IP to 100 requests per windowMs
-      })
+        max: 100, // limit each IP to 100 requests per windowMs
+      }),
     );
 
     await app.listen(PORT);
@@ -35,6 +36,6 @@ async function bootstrap() {
     throw new InternalServerErrorException(error);
   }
 }
-bootstrap().catch(e => {
+bootstrap().catch((e) => {
   throw e;
 });
