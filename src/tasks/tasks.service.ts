@@ -1,7 +1,7 @@
 import {
   Injectable,
   NotFoundException,
-  InternalServerErrorException
+  InternalServerErrorException,
 } from '@nestjs/common';
 import { TaskRepository } from './task.repository';
 import { CreateTaskDto } from './dtos/create-task.dto';
@@ -13,7 +13,8 @@ export class TasksService {
   constructor(private taskRepository: TaskRepository) {}
 
   async getTasks(): Promise<Task[]> {
-    return await this.taskRepository.getTasks();
+    const tasks = await this.taskRepository.getTasks();
+    return tasks;
   }
 
   async getTaskById(id: string): Promise<Task> {
@@ -27,12 +28,13 @@ export class TasksService {
   }
 
   async createTask(createTaskDto: CreateTaskDto): Promise<Task> {
-    return await this.taskRepository.createTask(createTaskDto);
+    const task = await this.taskRepository.createTask(createTaskDto);
+    return task;
   }
 
   async updateTask(
     id: string,
-    { title, description, status }: UpdateTaskDto
+    { title, description, status }: UpdateTaskDto,
   ): Promise<Task> {
     const task = await this.getTaskById(id);
 
